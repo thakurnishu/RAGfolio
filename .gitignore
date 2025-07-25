@@ -1,0 +1,52 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.so
+
+# Env / packaging
+.venv/
+.uv/
+env/
+venv/
+Pipfile.lock
+poetry.lock
+*.egg-info/
+*.egg
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build / dist
+dist/
+build/
+
+# Logs / test
+*.log
+coverage.xml
+htmlcov/
+.tox/
+.pytest_cache/
+.cache/
+
+# Local config
+.env
+.env.*
+
+# uv-related
+uv.lock
+
+# Frontend (if using something like Vite/React)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
