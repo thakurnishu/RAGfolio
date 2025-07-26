@@ -17,7 +17,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "80:8501"
+      - "8765:8501"
     environment:
       - BACKEND_URL=${BACKEND_URL}
     depends_on:

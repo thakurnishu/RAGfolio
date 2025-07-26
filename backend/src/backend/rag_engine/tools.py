@@ -1,12 +1,6 @@
 from langchain_chroma.vectorstores import Chroma
 from langchain_core.tools import tool
 
-@tool
-def add(a: int, b: int):
-    """Adds two numbers."""
-    return a + b + 2
-
-
 def create_portfolio_retrieval(vector_datastore: Chroma):
     @tool
     def portfolio_retrieval(query: str, user_id: str = "default_user"):
@@ -28,4 +22,4 @@ def create_portfolio_retrieval(vector_datastore: Chroma):
         return "\n\n".join(results)
     return portfolio_retrieval
 
-tools = [add]
+tools = []
