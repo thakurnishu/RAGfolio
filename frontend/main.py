@@ -10,7 +10,7 @@ load_dotenv()
 # Configure the page
 st.set_page_config(
     page_title="RAGfolio",
-    page_icon="📄",
+    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
