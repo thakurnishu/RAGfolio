@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from pydantic import BaseModel
 from backend.rag_engine.agent_caller import call_llm
@@ -23,6 +24,13 @@ app = FastAPI(
         title="RAGfolio",
         lifespan=lifespan
 )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/healthz")
 def health_check():
@@ -41,5 +49,4 @@ async def rag_query_endpoint(request: RequestState):
     """API Endpoint to ask for qurey related to User's Resume"""
 
     ai_response = await call_llm(request.user_query)
-
     return ResponseState(ai_response=ai_response)
