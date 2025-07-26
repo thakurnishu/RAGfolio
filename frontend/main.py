@@ -66,7 +66,7 @@ def query_backend(question):
 
 # App title and description
 st.title("RAGfolio")
-#st.markdown("### AI-powered resume analysis and Q&A system")
+st.markdown("## Hi, I'm Nishant 👋 — curious about me? Ask my AI buddy, it knows almost everything 😉")
 st.markdown("---")
 
 # Initialize session state for chat history
@@ -81,11 +81,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     if st.button("📋 What are the key skills and qualifications?", use_container_width=True):
-        question = "What are the key skills and qualifications mentioned in this resume?"
+        question = "What are the key skills and qualifications?"
         st.session_state.current_query = question
         
     if st.button("🎯 What projects or achievements stand out?", use_container_width=True):
-        question = "What projects or achievements stand out in this resume?"
+        question = "What projects or achievements stand out?"
         st.session_state.current_query = question
 
 with col2:
@@ -94,7 +94,7 @@ with col2:
         st.session_state.current_query = question
         
     if st.button("🎓 What is the educational background?", use_container_width=True):
-        question = "What is the educational background of this candidate?"
+        question = "What is the educational background?"
         st.session_state.current_query = question
 
 st.markdown("---")
