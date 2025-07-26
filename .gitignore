@@ -14,8 +14,6 @@ __pycache__/
 .uv/
 env/
 venv/
-Pipfile.lock
-poetry.lock
 *.egg-info/
 *.egg
 
@@ -44,9 +42,6 @@ htmlcov/
 # Local config
 .env
 .env.*
-
-# uv-related
-uv.lock
 
 # Frontend (if using something like Vite/React)
 frontend/node_modules/
