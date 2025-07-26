@@ -1,15 +1,13 @@
-version: '3.8'
-
 services:
   backend:
     build: 
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     environment:
-      - PORT=8000
-      # Add other environment variables from your .env file here
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CHROMA_TENANT=${CHROMA_TENANT}
+      - CHROMA_DATABASE=${CHROMA_DATABASE}
+      - CHROMA_API_KEY=${CHROMA_API_KEY}
     restart: unless-stopped
     networks:
       - ragfolio-network
@@ -21,8 +19,7 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - PORT=8501
-      # Add other environment variables from your .env file here
+      - BACKEND_URL=${BACKEND_URL}
     depends_on:
       - backend
     restart: unless-stopped

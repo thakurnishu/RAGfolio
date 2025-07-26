@@ -34,6 +34,16 @@ if not BACKEND_URL:
     print("backend url not found!")
     st.stop()
 
+def estimate_tokens(text):
+    """Estimate token count - roughly 4 characters per token"""
+    return len(text.split())
+
+def validate_token_limit(text, max_tokens=50):
+    """Check if text exceeds token limit"""
+
+    token_count = estimate_tokens(text)
+    return token_count <= max_tokens, token_count
+
 def query_backend(question):
     """Send query to backend and return response"""
     try:
@@ -91,16 +101,34 @@ st.markdown("---")
 
 # Manual query input
 st.subheader("✍️ Ask Your Own Question")
+
+# Add token limit information
+st.info("💡 **Token Limit:** Please keep your questions under 50 tokens (approximately 50 words) for optimal processing.")
+
 user_query = st.text_input(
     "Enter your question:",
     placeholder="Type your question about the resume here...",
     key="manual_query"
 )
 
+# Real-time token counter
+if user_query:
+    is_valid, token_count = validate_token_limit(user_query)
+    
+    if is_valid:
+        st.success(f"✅ Token count: {token_count}/50")
+    else:
+        st.error(f"❌ Token count: {token_count}/50 - Please rephrase your question in smaller chunks!")
+
 # Submit button for manual query
 if st.button("🔍 Ask Question", type="primary", use_container_width=True):
     if user_query.strip():
-        st.session_state.current_query = user_query.strip()
+        is_valid, token_count = validate_token_limit(user_query.strip())
+        
+        if not is_valid:
+            st.error(f"❌ **Question too long!** Your question contains {token_count} tokens, but the limit is 50 tokens. Please rephrase your question in smaller chunks.")
+        else:
+            st.session_state.current_query = user_query.strip()
 
 # Process the query if one exists
 if 'current_query' in st.session_state and st.session_state.current_query:
