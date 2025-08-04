@@ -2,16 +2,18 @@ from typing import Sequence, cast
 from langchain_core.messages.base import BaseMessage
 from langchain_core.messages.human import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-from backend.rag_engine.embedding import start_embedding
+from backend.resume_embedding.embedding import start_embedding
 from backend.rag_engine.state import AgentState
 from backend.rag_engine.workflow import compile_graph_state
 from backend.rag_engine.tools import create_portfolio_retrieval
 from backend.rag_engine.tools import tools
+from langchain_chroma.vectorstores import Chroma
 
 
-async def call_llm(rag_query: str):
+async def call_llm(rag_query: str, vector_store: Chroma) -> str:
+#async def call_llm(rag_query: str) -> str:
 
-    vector_store = await start_embedding()
+    #vector_store = await start_embedding()
 
     portfolio_retrieval = create_portfolio_retrieval(vector_store)
     tools.append(portfolio_retrieval)
