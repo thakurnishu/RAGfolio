@@ -1,8 +1,8 @@
 import os
 
 from langchain_chroma.vectorstores import Chroma
-from backend.resume_embedding.config import ResumeConfig
-from backend.resume_embedding.embedding_system import ResumeEmbeddingSystem
+from resume_embedding.config import ResumeConfig
+from resume_embedding.embedding_system import ResumeEmbeddingSystem
 
 async def start_embedding() -> Chroma:
     resume_config = ResumeConfig()

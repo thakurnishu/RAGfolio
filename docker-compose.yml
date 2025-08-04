@@ -1,31 +1,14 @@
 services:
-  backend:
+  app:
     build: 
-      context: ./backend
+      context: ./app
       dockerfile: Dockerfile
+    ports:
+      - "8765:8501"
     environment:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - CHROMA_TENANT=${CHROMA_TENANT}
       - CHROMA_DATABASE=${CHROMA_DATABASE}
       - CHROMA_API_KEY=${CHROMA_API_KEY}
     restart: unless-stopped
-    networks:
-      - ragfolio-network
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "8765:8501"
-    environment:
-      - BACKEND_URL=${BACKEND_URL}
-    depends_on:
-      - backend
-    restart: unless-stopped
-    networks:
-      - ragfolio-network
-
-networks:
-  ragfolio-network:
-    driver: bridge

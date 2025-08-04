@@ -14,8 +14,7 @@ down:
 	@docker compose down
 clean:
 	@docker compose down -v
-	@docker rmi ragfolio-frontend:latest
-	@docker rmi ragfolio-backend:latest
+	@docker rmi ragfolio-app:latest
 
 setup-nginx:
 	echo "Copied nginx.conf to sites-available"

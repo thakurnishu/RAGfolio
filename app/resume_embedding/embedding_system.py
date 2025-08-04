@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from backend.resume_embedding.config import ResumeConfig
+from resume_embedding.config import ResumeConfig
 from langchain_core.documents.base import Document as langchain_docs
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma

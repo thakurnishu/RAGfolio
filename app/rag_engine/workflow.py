@@ -1,9 +1,9 @@
 from langgraph.graph.state import CompiledStateGraph
-from backend.rag_engine.state import AgentState
 from langgraph.graph import StateGraph, END, START
-from backend.rag_engine.nodes import main_node
 from langgraph.prebuilt import ToolNode
-from backend.rag_engine.tools import tools as tools_list
+from rag_engine.tools import tools as tools_list
+from rag_engine.nodes import main_node
+from rag_engine.state import AgentState
 
 
 def compile_graph_state() -> CompiledStateGraph:

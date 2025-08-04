@@ -1,10 +1,12 @@
-import os
 import streamlit as st
-import requests
-import json
 
 from dotenv import load_dotenv
+import asyncio
+
+from rag_engine.agent_caller import call_llm
+from resume_embedding.embedding import start_embedding
 load_dotenv()
+
 
 
 # Configure the page
@@ -27,13 +29,6 @@ hide_streamlit_style = """
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# Backend API configuration
-BACKEND_URL = os.getenv("BACKEND_URL")
-
-if not BACKEND_URL:
-    print("backend url not found!")
-    st.stop()
-
 def estimate_tokens(text):
     """Estimate token count - roughly 4 characters per token"""
     return len(text.split())
@@ -44,25 +39,12 @@ def validate_token_limit(text, max_tokens=50):
     token_count = estimate_tokens(text)
     return token_count <= max_tokens, token_count
 
-def query_backend(question):
+async def query_backend(question):
     """Send query to backend and return response"""
-    try:
-        response = requests.post(
-            f"{BACKEND_URL}/rag_query",
-            json={"user_query": question},
-            headers={"Content-Type": "application/json"},
-            timeout=30
-        )
-        response.raise_for_status()
-        return response.json()["ai_response"]
-    except requests.exceptions.ConnectionError:
-        return {"error": "Could not connect to backend server. Please ensure the backend is running on localhost:8000"}
-    except requests.exceptions.Timeout:
-        return {"error": "Request timed out. Please try again."}
-    except requests.exceptions.RequestException as e:
-        return {"error": f"Request failed: {str(e)}"}
-    except json.JSONDecodeError:
-        return {"error": "Invalid response from backend"}
+    
+    vector_store = await start_embedding()
+    ai_response = await call_llm(question, vector_store)  # Assuming vector_store is set up elsewhere
+    return ai_response
 
 # App title and description
 st.title("RAGfolio")
@@ -141,29 +123,26 @@ if 'current_query' in st.session_state and st.session_state.current_query:
     
     # Show loading spinner while processing
     with st.spinner("🤔 Analyzing resume..."):
-        response = query_backend(query)
+        response = asyncio.run(query_backend(query))
     
     # Display the response
     st.subheader("💬 Answer:")
     
-    if "error" in response:
-        st.error(f"❌ {response['error']}")
+    # Assuming the backend returns a response with an 'answer' field
+    # Adjust this based on your actual backend response format
+    if isinstance(response, dict):
+        answer = response.get('answer', response.get('response', str(response)))
     else:
-        # Assuming the backend returns a response with an 'answer' field
-        # Adjust this based on your actual backend response format
-        if isinstance(response, dict):
-            answer = response.get('answer', response.get('response', str(response)))
-        else:
-            answer = str(response)
-        
-        st.success("✅ Response received!")
-        st.write(answer)
-        
-        # Add to chat history
-        st.session_state.chat_history.append({
-            'question': query,
-            'answer': answer
-        })
+        answer = str(response)
+    
+    st.success("✅ Response received!")
+    st.write(answer)
+    
+    # Add to chat history
+    st.session_state.chat_history.append({
+        'question': query,
+        'answer': answer
+    })
     
     # Clear the current query
     del st.session_state.current_query
@@ -216,3 +195,4 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+

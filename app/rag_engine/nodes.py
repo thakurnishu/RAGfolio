@@ -1,5 +1,5 @@
 from langchain_core.messages.system import SystemMessage
-from backend.rag_engine.state import AgentState
+from rag_engine.state import AgentState
 import datetime
 
 def main_node(state: AgentState) -> AgentState:
