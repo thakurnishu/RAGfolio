@@ -6,7 +6,7 @@ artifact_registry_repository_id = "ragfolio"
 
 cloud_run_name = "ragfolio-cloud-run"
 ingress        = "INGRESS_TRAFFIC_ALL"
-image          = "us-central1-docker.pkg.dev/personal-nishantlabs/ragfolio/ragfolio:efc228be727df1350f7d7de08329615db09573b8"
+image          = "us-central1-docker.pkg.dev/personal-nishantlabs/ragfolio/ragfolio:43b43e8c8a410858f45e241e8734a1c8fd7d0e79"
 memory         = "1Gi"
 public_access  = true
 port           = 8501
