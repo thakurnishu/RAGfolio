@@ -1,34 +1,34 @@
 variable "zone" {
-  type        = string
+  type = string
 }
 variable "project_id" {
-  type        = string
+  type = string
 }
 variable "region" {
-  type        = string
+  type = string
 }
 
 variable "ingress" {
-  type        = string
+  type = string
 }
 variable "deletion_protection" {
-  type        = bool
+  type = bool
 }
 variable "cloud_run_name" {
-  type        = string
+  type = string
 }
 variable "image" {
-  type        = string
+  type = string
 }
 variable "memory" {
-  type        = string
+  type = string
 }
 variable "allow_unauthenticated" {
-  type        = bool
+  type = bool
 }
 variable "port" {
-  type        = number
+  type = number
 }
 variable "cpu" {
-  type        = number
+  type = number
 }

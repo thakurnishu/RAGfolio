@@ -1,13 +1,14 @@
 name: Build And Deploy
 
 env:
-  WORKLOAD_IDENTITY: 'projects/616726282813/locations/global/workloadIdentityPools/github/providers/github'
-  SERVICE_ACCOUNT: 'backstage-workflow-automation@jbbkj-backstage.iam.gserviceaccount.com'
+  WORKLOAD_IDENTITY: 'projects/409209109459/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
+  SERVICE_ACCOUNT: 'container-pusher@personal-nishantlabs.iam.gserviceaccount.com'
   GCP_ARTIFACT_REGION: 'us-central1'
-  GCP_PROJECT_ID: 'jbbkj-backstage'
-  GCP_ARTIFACT_REGISTRY: 'jbbkj-backstage'
-  WORKING_DIR: 'backstage-app'
-  IMAGE_NAME: 'backstage'
+  GCP_PROJECT_ID: 'personal-nishantlabs'
+  GCP_ARTIFACT_REGISTRY: 'ragfolio'
+  IMAGE_NAME: 'ragfolio'
+  WORKING_DIR: 'app'
+
 
 on:
   workflow_dispatch:
@@ -51,11 +52,7 @@ jobs:
       - name: Build and push Docker image to Google Artifact Registry
         working-directory: ${{ env.WORKING_DIR }}
         run: |
-          # Install Backstage App
-          yarn install
-          yarn tsc
-          yarn build:backend
-          yarn build-image
           commit_id=$(git rev-parse HEAD)
-          docker tag backstage:latest  ${{ env.GCP_ARTIFACT_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${commit_id}
-          docker push ${{ env.GCP_ARTIFACT_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${commit_id}
+          docker build -t \
+            ${{ env.GCP_ARTIFACT_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${commit_id} .
+          docker push us-central1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${commit_id}
