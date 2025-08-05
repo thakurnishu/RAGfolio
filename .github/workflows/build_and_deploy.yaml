@@ -1,0 +1,61 @@
+name: Build And Deploy
+
+env:
+  WORKLOAD_IDENTITY: 'projects/616726282813/locations/global/workloadIdentityPools/github/providers/github'
+  SERVICE_ACCOUNT: 'backstage-workflow-automation@jbbkj-backstage.iam.gserviceaccount.com'
+  GCP_ARTIFACT_REGION: 'us-central1'
+  GCP_PROJECT_ID: 'jbbkj-backstage'
+  GCP_ARTIFACT_REGISTRY: 'jbbkj-backstage'
+  WORKING_DIR: 'backstage-app'
+  IMAGE_NAME: 'backstage'
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - 'build and push'
+        default: 'build and push' 
+
+jobs:
+  build-and-deploy:
+    permissions:
+      contents: 'read'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - id: 'applierAuth'
+        if: github.event_name == 'workflow_dispatch'
+        uses: ./.github/actions/authenticate-gcp
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY }}
+          service_account: ${{ env.SERVICE_ACCOUNT }} 
+
+      - name: 'Set up Cloud SDK'
+        if: github.event_name == 'workflow_dispatch'
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
+
+      - name: Configure Docker to use the gcloud command-line tool as a credential helper
+        run: |
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+
+      - name: Build and push Docker image to Google Artifact Registry
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          # Install Backstage App
+          yarn install
+          yarn tsc
+          yarn build:backend
+          yarn build-image
+          commit_id=$(git rev-parse HEAD)
+          docker tag backstage:latest  ${{ env.GCP_ARTIFACT_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${commit_id}
+          docker push ${{ env.GCP_ARTIFACT_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${commit_id}

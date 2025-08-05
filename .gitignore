@@ -1,3 +1,7 @@
+
+.terraform
+*.serviceaccount.json
+
 # Byte-compiled / cache
 __pycache__/
 *.py[cod]

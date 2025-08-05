@@ -30,4 +30,9 @@ setup-certbot:
 	sudo certbot --nginx -d ragfolio.nishantlabs.cloud
 
 
+tf-init:
+	@cd infra
+	@export GOOGLE_APPLICATION_CREDENTIALS="terraform.serviceaccount.json"
+	@terraform init -backend-config="bucket=terraform_statefiles_nishantlabs" -backend-config="prefix=ragfolio/terraform.state" 
+	@cd ..
 
