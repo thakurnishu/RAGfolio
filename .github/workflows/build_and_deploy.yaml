@@ -59,6 +59,8 @@ jobs:
         docker build -t "${IMAGE_REPO}:${commit_id}" .
         docker push "${IMAGE_REPO}:${commit_id}"
 
+    - uses: hashicorp/setup-terraform@v3
+
     - name: Update tfvars file
       run: |
         commit_id=$(git rev-parse HEAD)
@@ -70,13 +72,22 @@ jobs:
         git config --global user.name "${{ env.GITHUB_USERNAME }}"
         git checkout -b $BRANCH
 
-        sed -i "s|^image = .*|image = \"$new_image\"|" infra/terraform.tfvars
+        sed -i "s|^image[[:space:]]*=.*|image = \"$new_image\"|" infra/terraform.tfvars
 
+        terraform fmt infra/terraform.tfvars
         git add infra/terraform.tfvars
+
+        if git diff --cached --quiet; then
+          echo "No changes to commit. Skipping commit and PR creation."
+          echo "skip_pr=true" >> $GITHUB_ENV
+          exit 0
+        fi
+
         git commit -m "chore(terraform): update image to ${commit_id}"
-        git push origin $BRANCH
+        git push origin $BRANCH || true
 
     - name: Create Pull Request
+      if: env.skip_pr != 'true'
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
