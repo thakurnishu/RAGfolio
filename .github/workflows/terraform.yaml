@@ -23,7 +23,8 @@ on:
         options:
           - 'destroy'
           - 'create'
-        default: 'create' 
+          - 'plan'
+        default: 'plan' 
 jobs:
   Terraform-Infra:
     permissions:
@@ -48,7 +49,6 @@ jobs:
 
       - id: fmt
         shell: bash
-        if: github.event.inputs.action == 'create'
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: terraform fmt -check
 
@@ -62,14 +62,13 @@ jobs:
                 -backend-config="prefix=${{ env.PREFIX }}" 
 
       - id: validate
-        if: github.event.inputs.action == 'create'
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: terraform validate -no-color
 
       - id: plan
         name: Terraform Plan
-        if: github.event.inputs.action == 'create'
+        if: github.event.inputs.action == 'plan'
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |

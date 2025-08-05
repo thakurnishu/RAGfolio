@@ -20,7 +20,7 @@ module "service_account" {
 module "grant_secret_access" {
   source                = "git::https://github.com/thakurnishu/terraform_modules.git//gcp/secret_access?ref=v1.0.0"
   service_account_email = module.service_account.email
-  secret_ids            = ["ragfolio-chroma-api-key", "ragfolio-chroma-database", "ragfolio-chroma-tenant", "ragfolio-google-api-key"]
+  secret_ids            = var.secret_ids
 
   depends_on = [
     module.service_account
@@ -63,28 +63,7 @@ module "cloud_run" {
   public_access   = var.public_access
 
 
-  secret_env_vars = [
-    {
-      name    = "GOOGLE_API_KEY"
-      secret  = "ragfolio-google-api-key"
-      version = "1"
-    },
-    {
-      name    = "CHROMA_TENANT"
-      secret  = "ragfolio-chroma-tenant"
-      version = "1"
-    },
-    {
-      name    = "CHROMA_DATABASE"
-      secret  = "ragfolio-chroma-database"
-      version = "1"
-    },
-    {
-      name    = "CHROMA_API_KEY"
-      secret  = "ragfolio-chroma-api-key"
-      version = "1"
-    },
-  ]
+  secret_env_vars = var.secret_env_vars
 
   depends_on = [
     module.grant_secret_access,

@@ -14,6 +14,17 @@ variable "artifact_registry_repository_id" {
 variable "ingress" {
   type = string
 }
+
+variable "secret_env_vars" {
+  type = list(object({
+    name    = string
+    secret  = string
+    version = string
+  }))
+}
+variable "secret_ids" {
+  type = list(string)
+}
 variable "deletion_protection" {
   type = bool
 }
