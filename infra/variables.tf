@@ -7,6 +7,9 @@ variable "project_id" {
 variable "region" {
   type = string
 }
+variable "artifact_registry_repository_id" {
+  type = string
+}
 
 variable "ingress" {
   type = string
@@ -23,7 +26,7 @@ variable "image" {
 variable "memory" {
   type = string
 }
-variable "allow_unauthenticated" {
+variable "public_access" {
   type = bool
 }
 variable "port" {

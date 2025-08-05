@@ -1,0 +1,92 @@
+name: "Terraform Infra"
+
+env:
+  WORKLOAD_IDENTITY: 'projects/409209109459/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
+  SERVICE_ACCOUNT: 'terraform@personal-nishantlabs.iam.gserviceaccount.com'
+  BUCKET_NAME: 'terraform_statefiles_nishantlabs'
+  PREFIX: 'ragfolio'
+  TERRAFORM_VERSION: '1.9.6'
+  GCLOUD_SDK_VERSION: '>= 363.0.0'
+  WORKING_DIRECTORY: 'infra'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'infra/**'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - 'destroy'
+          - 'create'
+        default: 'create' 
+jobs:
+  Terraform-Infra:
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - id: 'applierAuth'
+        uses: ./.github/actions/authenticate-gcp
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY }}
+          service_account: ${{ env.SERVICE_ACCOUNT }} 
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - id: fmt
+        shell: bash
+        if: github.event.inputs.action == 'create'
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: terraform fmt -check
+
+      - id: init
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          terraform init \
+                -reconfigure \
+                -backend-config="bucket=${{ env.BUCKET_NAME }}" \
+                -backend-config="prefix=${{ env.PREFIX }}" 
+
+      - id: validate
+        if: github.event.inputs.action == 'create'
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: terraform validate -no-color
+
+      - id: plan
+        name: Terraform Plan
+        if: github.event.inputs.action == 'create'
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          terraform plan -input=false -no-color
+
+      - id: apply
+        name: Terraform Apply
+        if: github.event.inputs.action == 'create'
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          terraform apply -input=false -auto-approve -no-color
+
+      - id: destroy
+        name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          terraform destroy -input=false -auto-approve -no-color
