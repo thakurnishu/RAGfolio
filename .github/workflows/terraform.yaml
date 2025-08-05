@@ -76,7 +76,7 @@ jobs:
 
       - id: apply
         name: Terraform Apply
-        if: github.event.inputs.action == 'create'
+        if: github.event.inputs.action == 'create' && github.ref == 'refs/heads/monolith'
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
