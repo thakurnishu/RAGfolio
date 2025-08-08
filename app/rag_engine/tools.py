@@ -21,5 +21,3 @@ def create_portfolio_retrieval(vector_datastore: Chroma):
         
         return "\n\n".join(results)
     return portfolio_retrieval
-
-tools = []

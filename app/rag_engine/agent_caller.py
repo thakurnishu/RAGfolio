@@ -5,11 +5,12 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from rag_engine.state import AgentState
 from rag_engine.workflow import compile_graph_state
 from rag_engine.tools import create_portfolio_retrieval
-from rag_engine.tools import tools
 from langchain_chroma.vectorstores import Chroma
 
 
 async def call_llm(rag_query: str, vector_store: Chroma) -> str:
+
+    tools = []
 
     portfolio_retrieval = create_portfolio_retrieval(vector_store)
     tools.append(portfolio_retrieval)
