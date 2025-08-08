@@ -3,10 +3,11 @@ COPY --from=ghcr.io/astral-sh/uv:0.7.15 /uv /uvx /bin/
 
 WORKDIR /app
 
-ADD . /app
-ADD resume.pdf /app/.
+ADD uv.lock /app/uv.lock
+ADD pyproject.toml /app/pyproject.toml
+RUN uv sync --locked
 
-RUN uv sync --locked 
+ADD . /app
 
 EXPOSE 8501
 

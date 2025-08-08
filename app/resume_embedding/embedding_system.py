@@ -7,6 +7,7 @@ from langchain_chroma import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 import uuid
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 class ResumeEmbeddingSystem:
     def __init__(self, config: ResumeConfig):
@@ -54,6 +55,7 @@ class ResumeEmbeddingSystem:
         
         return chunks
     
+    @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(5), reraise=True)
     def store_in_chromadb(self, chunks: List[langchain_docs], user_id: str = "default_user") -> List[str]:
         """Store chunks and embeddings in ChromaDB with override capability"""
         # First, delete existing resume for this user

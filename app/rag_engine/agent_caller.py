@@ -18,7 +18,7 @@ async def call_llm(rag_query: str, vector_store: Chroma) -> str:
     model = "gemini-2.5-flash"
     llm = ChatGoogleGenerativeAI(model=model).bind_tools(tools)
 
-    compile_agent = compile_graph_state()
+    compile_agent = compile_graph_state(tools)
 
     agent_input = AgentState({
         "messages": cast(Sequence[BaseMessage], [HumanMessage(content=rag_query)]),

@@ -133,6 +133,7 @@ dependencies = [
     { name = "pypdf" },
     { name = "python-dotenv" },
     { name = "streamlit" },
+    { name = "tenacity" },
 ]
 
 [package.metadata]
@@ -147,6 +148,7 @@ requires-dist = [
     { name = "pypdf", specifier = ">=5.9.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "streamlit", specifier = ">=1.47.1" },
+    { name = "tenacity", specifier = ">=9.1.2" },
 ]
 
 [[package]]
