@@ -1,9 +1,9 @@
 name: "Terraform Infra"
 
 env:
-  WORKLOAD_IDENTITY: 'projects/409209109459/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
-  SERVICE_ACCOUNT: 'terraform@personal-nishantlabs.iam.gserviceaccount.com'
-  BUCKET_NAME: 'terraform_statefiles_nishantlabs'
+  WORKLOAD_IDENTITY: 'projects/307684202109/locations/global/workloadIdentityPools/workload-identity-pool/providers/github-thakurnishu'
+  SERVICE_ACCOUNT: 'tf-apply-nishantlabs@org-identity-hub-471410.iam.gserviceaccount.com'
+  BUCKET_NAME: 'nishantlabs_terraform_statefiles'
   PREFIX: 'ragfolio'
   TERRAFORM_VERSION: '1.9.6'
   GCLOUD_SDK_VERSION: '>= 363.0.0'

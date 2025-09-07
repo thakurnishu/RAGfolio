@@ -1,11 +1,11 @@
 name: Build And Deploy
 
 env:
-  WORKLOAD_IDENTITY: 'projects/409209109459/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
-  SERVICE_ACCOUNT: 'container-pusher@personal-nishantlabs.iam.gserviceaccount.com'
+  WORKLOAD_IDENTITY: 'projects/307684202109/locations/global/workloadIdentityPools/workload-identity-pool/providers/github-thakurnishu'
+  SERVICE_ACCOUNT: 'imagepusher-nishantlabs@org-identity-hub-471410.iam.gserviceaccount.com'
   GCP_ARTIFACT_REGION: 'us-central1'
-  GCP_PROJECT_ID: 'personal-nishantlabs'
-  GCP_ARTIFACT_REGISTRY: 'ragfolio'
+  GCP_PROJECT_ID: 'nishantlabs'
+  GCP_ARTIFACT_REGISTRY: 'nishantlabs'
   IMAGE_NAME: 'ragfolio'
   WORKING_DIR: 'app'
   GITHUB_EMAIL: 'github-actions[bot]@users.noreply.github.com'

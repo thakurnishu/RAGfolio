@@ -1,8 +1,8 @@
 zone                            = "us-central1-a"
-project_id                      = "personal-nishantlabs"
+project_id                      = "nishantlabs"
 region                          = "us-central1"
 deletion_protection             = false
-artifact_registry_repository_id = "ragfolio"
+artifact_registry_repository_id = "nishantlabs"
 
 cloud_run_name = "ragfolio-cloud-run"
 ingress        = "INGRESS_TRAFFIC_ALL"
