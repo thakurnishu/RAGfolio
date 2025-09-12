@@ -58,7 +58,7 @@ module "cloud_run" {
   cpu    = var.cpu
   memory = var.memory
 
-  cpu_idle = true
+  cpu_idle = false
 
   service_account = module.service_account.email
   public_access   = var.public_access
